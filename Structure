@@ -1,0 +1,11 @@
+base-voting-dapp/
+│
+├─ contracts/
+│   ├─ Voting.sol          # Smart contract untuk voting
+│
+├─ scripts/
+│   ├─ deploy.js           # (Optional) Script deploy
+│
+├─ README.md               # Panduan lengkap deploy di Remix
+│
+└─ .gitignore
