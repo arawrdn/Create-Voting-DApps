@@ -1,0 +1,39 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract Voting is Ownable {
+    struct Candidate {
+        string name;
+        uint256 voteCount;
+    }
+
+    mapping(uint256 => Candidate) public candidates;
+    mapping(address => bool) public hasVoted;
+    uint256 public candidatesCount;
+
+    event Voted(address indexed voter, uint256 candidateId);
+
+    constructor(string[] memory candidateNames) {
+        for (uint256 i = 0; i < candidateNames.length; i++) {
+            candidates[i] = Candidate(candidateNames[i], 0);
+            candidatesCount++;
+        }
+    }
+
+    function vote(uint256 candidateId) external {
+        require(candidateId < candidatesCount, "Invalid candidate");
+        require(!hasVoted[msg.sender], "Already voted");
+
+        hasVoted[msg.sender] = true;
+        candidates[candidateId].voteCount++;
+
+        emit Voted(msg.sender, candidateId);
+    }
+
+    function getCandidate(uint256 candidateId) external view returns (string memory name, uint256 votes) {
+        Candidate memory c = candidates[candidateId];
+        return (c.name, c.voteCount);
+    }
+}
